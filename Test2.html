@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        table {
+            text-align: center;
+            margin-left: 10%;
+            margin-right: 50%;
+            font-family: 'Lucida Sans', 'Lucida Sans Regular',
+                'Lucida Grande', 'Lucida Sans Unicode',
+                Geneva, Verdana, sans-serif;
+        }
+
+        input,
+        button {
+            padding: 12px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-family: 'Lucida Sans', 'Lucida Sans Regular',
+                'Lucida Grande', 'Lucida Sans Unicode',
+                Geneva, Verdana, sans-serif;
+
+        }
+
+        .error {
+            border: 2px solid red;
+        }
+
+        .valid {
+            border: 2px solid white;
+        }
+
+        #message {
+            color: red;
+        }
+
+        #messagePhone {
+            color: red;
+        }
+
+        #status {
+            display: inline-block;
+            margin-left: 10px;
+            font-size: 14px;
+            color: green;
+        }
+
+        button:disabled {
+            background-color: #ccc;
+        }
+    </style>
+</head>
+
+<body>
+    <div align="center">
+        <h1>Booking place for your dinner!</h1>
+
+        <label for="name">Name:</label>
+        <input type="text" id="name" size="22">
+        <span id="message"></span><br>
+
+        <label for="phone">Phone Number</label>
+        <input type="text" id="phone" size="22" maxlength="6">
+        <span id="messagePhone"></span><br>
+
+    </div>
+
+    <div align="margin-left">
+        <h2>Select a time</h2>
+        <input type="radio" id="first" name="time" value="5" checked>
+        <label for="first">5:00</label><br>
+        <input type="radio" id="second" name="time" value="6">
+        <label for="second">6:00</label><br>
+        <input type="radio" id="third" name="time" value="7">
+        <label for="third">7:00</label><br>
+        <input type="radio" id="fourth" name="time" value="8">
+        <label for="fourth">8:00</label><br>
+
+        <h2>What would you like to have with us?</h2>
+        <input type="checkbox" id="starters" name="starters" value="starters">
+        <label for="starters">Starters</label><br>
+        <input type="checkbox" id="Main" name="Main" value="main">
+        <label for="Main">Main Course</label><br>
+        <input type="checkbox" id="dessert" name="dessert" value="dessert">
+        <label for="dessert">Dessert</label><br>
+        <input type="checkbox" id="drinks" name="drinks" value="drinks">
+        <label for="drinks">Drinks</label><br>
+
+    </div>
+
+    <button id="submit" disabled>
+        Submit
+    </button>
+    <span id="status">...</span>
+
+    <script>
+        document.getElementById("name").addEventListener("blur", validateName);
+        document.getElementById("phone").addEventListener("blur", validatePhone);
+        document.getElementById("name").addEventListener("input", checkFormValidity);
+        document.getElementById("phone").addEventListener("input", checkFormValidity);
+
+        const submitButton = document.getElementById("submit");
+
+        function validateName() {
+            const name = document.getElementById("name").value.trim();
+            const nameField = document.getElementById("name");
+            const message = document.getElementById("message");
+
+            if (!name) {
+                message.textContent = "Error: Name is empty.";
+                nameField.classList.add("error");
+                nameField.classList.remove("valid");
+                return false;
+            }
+
+            const nameParts = name.split(" ");
+            if (nameParts.length < 2) {
+                message.textContent = "Error: First and last names are required.";
+                nameField.classList.add("error");
+                nameField.classList.remove("valid");
+                return false;
+            }
+
+            message.textContent = "";
+            nameField.classList.add("valid");
+            nameField.classList.remove("error");
+            return true;
+        }
+
+        function validatePhone() {
+            const phone = document.getElementById("phone").value.trim();
+            const phoneField = document.getElementById("phone");
+            const messagePhone = document.getElementById("messagePhone");
+
+            if (!phone) {
+                messagePhone.textContent = "Error: Phone number is empty.";
+                phoneField.classList.add("error");
+                phoneField.classList.remove("valid");
+                return false;
+            }
+
+            if (phone.length !== 6) {
+                messagePhone.textContent = "Error: Phone numbers must have exactly 6 characters.";
+                phoneField.classList.add("error");
+                phoneField.classList.remove("valid");
+                return false;
+            }
+
+            const phoneRegex = /^[0-9][0-9a-zA-Z]{5}$/;
+            if (!phoneRegex.test(phone)) {
+                messagePhone.textContent = "Error: Phone number must start with a number.";
+                phoneField.classList.add("error");
+                phoneField.classList.remove("valid");
+                return false;
+            }
+
+            messagePhone.textContent = "";
+            phoneField.classList.add("valid");
+            phoneField.classList.remove("error");
+            return true;
+        }
+
+        function checkFormValidity() {
+            if (validateName() && validatePhone()) {
+                submitButton.disabled = false;
+                document.getElementById("status").textContent = "Ready to submit!";
+            } else {
+                submitButton.disabled = true;
+                document.getElementById("status").textContent = "...";
+            }
+        }
+
+        submitButton.addEventListener("click", function () {
+            if (validateName() && validatePhone()) {
+                window.alert("Form submitted successfully!");
+            } else {
+                window.alert("Please fix the errors in the form.");
+            }
+        });
+    </script>
+
+</body>
+
+</html>
